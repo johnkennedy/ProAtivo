@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet, Image
 } from 'react-native';
@@ -6,6 +6,18 @@ import { useNavigation } from '@react-navigation/native';
 
 export default function TelaLogin() {
   const navigation = useNavigation();
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+
+  const handleLogin = () => {
+    if (email === "Teste" && senha === "123") {
+      //alert("Login bem-sucedido!");
+      navigation.navigate("TelaCliente");
+    } else {
+      alert("Email ou senha incorretos");
+    }
+  };
+  
 
   return (
     <View style={styles.container}>
@@ -20,17 +32,23 @@ export default function TelaLogin() {
           placeholder="seuemail@email.com.br"
           keyboardType="email-address"
           style={styles.input}
+          value={email}
+          onChangeText={setEmail}
+          placeholderTextColor="#999" // Deixando o placeholder mais escuro
         />
 
         <TextInput
           placeholder="************"
           secureTextEntry
           style={styles.input}
+          value={senha}
+          onChangeText={setSenha}
+          placeholderTextColor="#999"
         />
 
         <Text style={styles.forgot}>Esqueceu a senha?</Text>
 
-        <TouchableOpacity style={styles.botaoEntrar}>
+        <TouchableOpacity style={styles.botaoEntrar} onPress={handleLogin}>
           <Text style={styles.textoBotaoEntrar}>Entrar</Text>
         </TouchableOpacity>
 
@@ -77,7 +95,8 @@ const styles = StyleSheet.create({
     borderBottomColor: "#ccc",
     paddingVertical: 10,
     marginBottom: 20,
-    fontSize: 16
+    fontSize: 16,
+    color: "#333" // Corrige o texto digitado que estava claro também
   },
   forgot: {
     alignSelf: "flex-end",
