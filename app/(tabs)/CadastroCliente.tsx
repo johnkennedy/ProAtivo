@@ -1,6 +1,8 @@
-import { Entypo, FontAwesome5, Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import auth from "@react-native-firebase/auth";
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from 'expo-router';
+import type { FirebaseError } from 'firebase/app';
 import React, { useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import type { RootStackParamList } from '../types/routes';
@@ -10,30 +12,44 @@ type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
 export default function CadastroCliente() {
   const navigation = useNavigation<NavigationProps>();
 
-  const [nome, setNome] = useState('');
+  // const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const [endereco, setEndereco] = useState('');
-  const [whatsapp, setWhatsapp] = useState('');
+  // const [endereco, setEndereco] = useState('');
+  // const [whatsapp, setWhatsapp] = useState('');
+  const [loading, setLoading] = useState(false);
+
+    const signUp = async () => {
+    setLoading(true);
+    try {
+      await auth().createUserWithEmailAndPassword(email, senha);
+      alert("olha o email");
+    } catch (e) {
+      const error = e as FirebaseError;
+      alert("Cadastro falhou " + error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const limparCampos = () => {
-    setNome('');
+    // setNome('');
     setEmail('');
     setSenha('');
-    setEndereco('');
-    setWhatsapp('');
+    // setEndereco('');
+    // setWhatsapp('');
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
-        <Image source={require('./assets/logoProAtivo2.png')} style={styles.logo} resizeMode="contain" />
+        <Image source={require('../../assets/images/logoProAtivo2.png')} style={styles.logo} resizeMode="contain" />
       </View>
 
       <View style={styles.formContainer}>
         <Text style={styles.titulo}>Cadastro Cliente</Text>
 
-        <View style={styles.inputGroup}>
+        {/* <View style={styles.inputGroup}>
           <Ionicons name="person-outline" size={20} color="#00A651" />
           <TextInput
             placeholder="Seu nome completo"
@@ -42,7 +58,7 @@ export default function CadastroCliente() {
             onChangeText={setNome}
             placeholderTextColor="#999"
           />
-        </View>
+        </View> */}
 
         <View style={styles.inputGroup}>
           <MaterialIcons name="email" size={20} color="#00A651" />
@@ -68,7 +84,7 @@ export default function CadastroCliente() {
           />
         </View>
 
-        <View style={styles.inputGroup}>
+        {/* <View style={styles.inputGroup}>
           <Entypo name="location-pin" size={20} color="#00A651" />
           <TextInput
             placeholder="Endereço"
@@ -89,9 +105,9 @@ export default function CadastroCliente() {
             onChangeText={setWhatsapp}
             placeholderTextColor="#999"
           />
-        </View>
+        </View> */}
 
-        <TouchableOpacity style={styles.botaoCriar}>
+        <TouchableOpacity style={styles.botaoCriar} onPress={signUp}>
           <Text style={styles.textoBotao}>Criar</Text>
         </TouchableOpacity>
 

@@ -1,31 +1,45 @@
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import auth from "@react-native-firebase/auth";
+import type { FirebaseError } from 'firebase/app';
 import React, { useState } from 'react';
 import {
+  ActivityIndicator,
   Image,
   StyleSheet,
   Text, TextInput, TouchableOpacity,
   View
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import type { RootStackParamList } from '../types/routes';
 
-type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
 
 export default function TelaLogin() {
-  const navigation = useNavigation<NavigationProps>();
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
-    if (email === "Teste" && senha === "123") {
-      //alert("Login bem-sucedido!");
-      navigation.navigate("TelaCliente");
-    } else {
-      alert("Email ou senha incorretos");
+  const signUp = async () => {
+    setLoading(true);
+    try {
+      await auth().createUserWithEmailAndPassword(email, senha);
+      alert("olha o email");
+    } catch (e) {
+      const error = e as FirebaseError;
+      alert("Cadastro falhou " + error);
+    } finally {
+      setLoading(false);
     }
-  };
-  
+  }
+
+  const signIn = async () => {
+    setLoading(true);
+    try {
+      await auth().signInWithEmailAndPassword(email, senha);
+    } catch (e) {
+      const error = e as FirebaseError;
+      alert("Login falhou " + error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -37,7 +51,7 @@ export default function TelaLogin() {
         <Text style={styles.title}>Entrar no ProAtivo</Text>
 
         <TextInput
-          placeholder="seuemail@email.com.br"
+          placeholder="Email"
           keyboardType="email-address"
           style={styles.input}
           value={email}
@@ -46,7 +60,7 @@ export default function TelaLogin() {
         />
 
         <TextInput
-          placeholder="************"
+          placeholder="Senha"
           secureTextEntry
           style={styles.input}
           value={senha}
@@ -56,17 +70,22 @@ export default function TelaLogin() {
 
         <Text style={styles.forgot}>Esqueceu a senha?</Text>
 
-        <TouchableOpacity style={styles.botaoEntrar} onPress={handleLogin}>
-          <Text style={styles.textoBotaoEntrar}>Entrar</Text>
-        </TouchableOpacity>
+        {loading ? (
+          <ActivityIndicator size={'small'} style={{ margin: 28 }} />
+        ) : (
+          <>
+            <TouchableOpacity style={styles.botaoEntrar} onPress={signIn}>
+              <Text style={styles.textoBotaoEntrar}>Entrar</Text>
+            </TouchableOpacity>
 
-        {/* Botão Cadastrar */}
-        <TouchableOpacity
-          style={styles.botaoCadastrar}
-          onPress={() => navigation.navigate("EscolhaPerfil")}
-        >
-          <Text style={styles.textoBotaoCadastrar}>Cadastrar</Text>
-        </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.botaoCadastrar}
+              onPress={signUp}
+            >
+              <Text style={styles.textoBotaoCadastrar}>Cadastrar</Text>
+            </TouchableOpacity>
+          </>
+        )}
       </View>
     </SafeAreaView>
   );

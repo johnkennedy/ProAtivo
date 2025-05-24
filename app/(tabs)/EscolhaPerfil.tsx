@@ -20,7 +20,7 @@ export default function TelaEscolhaPerfil() {
       {/* Logo e fundo verde */}
       <View style={styles.header}>
         <Image
-          source={require('./assets/logoProAtivo2.png')}
+          source={require('../../assets/images/logoProAtivo2.png')}
           style={styles.logo}
           resizeMode="contain"
         />

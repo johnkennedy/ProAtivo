@@ -30,7 +30,7 @@ export default function CadastroProfissional() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
-        <Image source={require('./assets/logoProAtivo2.png')} style={styles.logo} resizeMode="contain" />
+        <Image source={require('../../assets/images/logoProAtivo2.png')} style={styles.logo} resizeMode="contain" />
       </View>
 
       <View style={styles.formContainer}>

@@ -1,14 +1,10 @@
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useRouter } from 'expo-router';
 import React from "react";
 import { Image, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
-import type { RootStackParamList } from './types/routes';
-
-type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
 
 export default function TelaInicial() {
-  const navigation = useNavigation<NavigationProps>();
+  const router = useRouter();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -16,7 +12,7 @@ export default function TelaInicial() {
 
       <View style={styles.logoContainer}>
         <Image
-          source={require('./assets/logoProAtivo1.png')}
+          source={require('../../assets/images/logoProAtivo1.png')}
           style={styles.logo}
           resizeMode="contain"
         />
@@ -31,14 +27,14 @@ export default function TelaInicial() {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.botaoEntrar}
-            onPress={() => navigation.navigate("Login")}
+            onPress={() => router.push("/Login")}
           >
             <Text style={styles.textoBotaoEntrar}>Entrar</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.botaoCadastrar}
-            onPress={() => navigation.navigate("EscolhaPerfil")}
+            onPress={() => router.push("/EscolhaPerfil")}
           >
             <Text style={styles.textoBotaoCadastrar}>Cadastrar</Text>
           </TouchableOpacity>
@@ -73,6 +69,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   titulo: {
+    textAlign: "center",
     fontSize: 35,
     fontWeight: "bold",
     color: "#ffffff",
