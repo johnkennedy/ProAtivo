@@ -1,16 +1,12 @@
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import auth from "@react-native-firebase/auth";
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+// import { createUserWithEmailAndPassword, getAuth } from '@firebase/auth';
 import { useNavigation } from 'expo-router';
 import type { FirebaseError } from 'firebase/app';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import type { RootStackParamList } from '../types/routes';
 
-type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
 
 export default function CadastroCliente() {
-  const navigation = useNavigation<NavigationProps>();
 
   // const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
@@ -19,10 +15,12 @@ export default function CadastroCliente() {
   // const [whatsapp, setWhatsapp] = useState('');
   const [loading, setLoading] = useState(false);
 
-    const signUp = async () => {
+  // const auth = getAuth();
+
+  const signUp = async () => {
     setLoading(true);
     try {
-      await auth().createUserWithEmailAndPassword(email, senha);
+      // await createUserWithEmailAndPassword(auth, email, senha);
       alert("olha o email");
     } catch (e) {
       const error = e as FirebaseError;

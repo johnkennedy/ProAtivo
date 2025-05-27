@@ -1,4 +1,3 @@
-import auth from "@react-native-firebase/auth";
 import type { FirebaseError } from 'firebase/app';
 import React, { useState } from 'react';
 import {
@@ -9,30 +8,21 @@ import {
   View
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+// import { getAuth, signInWithEmailAndPassword } from '@firebase/auth';
+// import { useRouter } from 'expo-router';
 
 
 export default function TelaLogin() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [loading, setLoading] = useState(false);
-
-  const signUp = async () => {
-    setLoading(true);
-    try {
-      await auth().createUserWithEmailAndPassword(email, senha);
-      alert("olha o email");
-    } catch (e) {
-      const error = e as FirebaseError;
-      alert("Cadastro falhou " + error);
-    } finally {
-      setLoading(false);
-    }
-  }
+  // const auth = getAuth();
+  // const router = useRouter();
 
   const signIn = async () => {
     setLoading(true);
     try {
-      await auth().signInWithEmailAndPassword(email, senha);
+      // await signInWithEmailAndPassword(auth, email, senha);
     } catch (e) {
       const error = e as FirebaseError;
       alert("Login falhou " + error);
