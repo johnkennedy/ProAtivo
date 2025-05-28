@@ -13,7 +13,9 @@ import {
 import { Feather, FontAwesome, Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { deslogar } from '../firebase/auth_logout';
 import type { RootStackParamList } from '../types/routes';
 
 type Profissional = {
@@ -75,15 +77,11 @@ export default function TelaCliente() {
 
   const categorias = ['Todos', 'Eletricista', 'Mecânico', 'Pedreiro'];
 
-  const handleLogoff = () => {
-    Alert.alert(
-      'Sair',
-      'Deseja realmente sair?',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        { text: 'Sair', onPress: () => navigation.navigate("TelaInicial") }
-      ]
-    );
+  const handleLogoff = async () => {
+    console.log("oi")
+    await deslogar();
+    router.navigate("/")
+    return;
   };
 
   const abrirWhatsApp = (profissional: Profissional) => {

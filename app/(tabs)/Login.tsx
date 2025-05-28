@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import type { FirebaseError } from 'firebase/app';
 import React, { useState } from 'react';
 import {
@@ -8,26 +9,25 @@ import {
   View
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-// import { getAuth, signInWithEmailAndPassword } from '@firebase/auth';
-// import { useRouter } from 'expo-router';
+import { logarComEmailESenha } from '../firebase/auth_signin_password';
 
 
 export default function TelaLogin() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [loading, setLoading] = useState(false);
-  // const auth = getAuth();
-  // const router = useRouter();
+  const router = useRouter();
 
   const signIn = async () => {
     setLoading(true);
     try {
-      // await signInWithEmailAndPassword(auth, email, senha);
+      await logarComEmailESenha(email, senha);
     } catch (e) {
       const error = e as FirebaseError;
       alert("Login falhou " + error);
     } finally {
       setLoading(false);
+      router.navigate("/TelaCliente");
     }
   }
 
@@ -70,7 +70,7 @@ export default function TelaLogin() {
 
             <TouchableOpacity
               style={styles.botaoCadastrar}
-              onPress={signUp}
+              onPress={() => console.log("oit")}
             >
               <Text style={styles.textoBotaoCadastrar}>Cadastrar</Text>
             </TouchableOpacity>

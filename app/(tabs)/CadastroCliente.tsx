@@ -1,9 +1,9 @@
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-// import { createUserWithEmailAndPassword, getAuth } from '@firebase/auth';
-import { useNavigation } from 'expo-router';
 import type { FirebaseError } from 'firebase/app';
+import { getAuth, sendEmailVerification, type User } from 'firebase/auth';
 import { useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { criarContaComEmailESenha } from '../firebase/auth_signup_password';
 
 
 export default function CadastroCliente() {
@@ -11,16 +11,19 @@ export default function CadastroCliente() {
   // const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  // const [endereco, setEndereco] = useState('');
-  // const [whatsapp, setWhatsapp] = useState('');
+  const [telefone, setTelefone] = useState('');
+  const [endereco, setEndereco] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // const auth = getAuth();
+  const auth = getAuth();
 
   const signUp = async () => {
     setLoading(true);
     try {
-      // await createUserWithEmailAndPassword(auth, email, senha);
+      const user = await criarContaComEmailESenha(email, senha);
+      if (user) {
+        await sendEmailVerification(user as User);
+      }
       alert("olha o email");
     } catch (e) {
       const error = e as FirebaseError;
@@ -37,6 +40,7 @@ export default function CadastroCliente() {
     // setEndereco('');
     // setWhatsapp('');
   };
+
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -112,12 +116,12 @@ export default function CadastroCliente() {
         <TouchableOpacity style={styles.botaoLimpar} onPress={limparCampos}>
           <Text style={styles.textoBotaoLimpar}>Limpar</Text>
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.botaoVoltar}
           onPress={() => navigation.navigate("EscolhaPerfil")}
         >
           <Text style={styles.textoBotaoVoltar}>Voltar</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </ScrollView>
   );
