@@ -1,5 +1,4 @@
 import { useRouter } from 'expo-router';
-import type { FirebaseError } from 'firebase/app';
 import React, { useState } from 'react';
 import {
   ActivityIndicator,
@@ -10,24 +9,31 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { logarComEmailESenha } from '../firebase/auth_signin_password';
+import CustomModalError from '../components/CustomModalError';
 
 
 export default function TelaLogin() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
 
   const signIn = async () => {
     setLoading(true);
     try {
       await logarComEmailESenha(email, senha);
-    } catch (e) {
-      const error = e as FirebaseError;
-      alert("Login falhou " + error);
+      router.navigate("/TelaCliente");
+    } catch (e: unknown) {
+      let message = "Ocorreu um erro inesperado";
+      if (e instanceof Error) {
+        message = e.message;
+      }
+      setErrorMessage(message);
+      setIsModalVisible(true);
     } finally {
       setLoading(false);
-      router.navigate("/TelaCliente");
     }
   }
 
@@ -76,6 +82,13 @@ export default function TelaLogin() {
             </TouchableOpacity>
           </>
         )}
+        <CustomModalError
+          visible={isModalVisible}
+          animationType="fade"
+          title='Erro no login'
+          message={errorMessage}
+          onRequestClose={() => setIsModalVisible(false)}
+        />
       </View>
     </SafeAreaView>
   );
