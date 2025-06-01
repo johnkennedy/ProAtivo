@@ -5,8 +5,9 @@ export interface Prestador {
   senha: string;
   tipo: "prestador";
   telefone?: string;
-  servicos: string[];         // ex: ["eletricista", "encanador"]
+  servicos: string[]; // ex: ["eletricista", "encanador"]
   descricao?: string;
   endereco?: string;
-  criadoEm?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

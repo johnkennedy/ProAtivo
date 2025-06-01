@@ -1,6 +1,6 @@
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import type { FirebaseError } from "firebase/app";
-import { getAuth, sendEmailVerification, type User } from "firebase/auth";
+import { sendEmailVerification, type User } from "firebase/auth";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -12,28 +12,36 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { criarContaComEmailESenha } from "../../firebase/auth_signup_password";
+import CustomModal from "../components/CustomModal";
+import { criarContaClienteComEmailESenha } from "@/firebase/criarContaCliente";
 
 export default function CadastroCliente() {
   const router = useRouter();
 
+  const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [telefone, setTelefone] = useState("");
   const [endereco, setEndereco] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const auth = getAuth();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const successMessage = "Verifique seu email para confirmar o cadastro.";
+  const tipo = "cliente";
 
   const signUp = async () => {
     setLoading(true);
     try {
-      const user = await criarContaComEmailESenha(email, senha);
+      const user = await criarContaClienteComEmailESenha({
+        nome,
+        email,
+        senha,
+        tipo,
+        endereco,
+        telefone,
+      });
       if (user) {
         await sendEmailVerification(user as User);
-        alert("Verifique seu email para confirmar a conta.");
-        // Exemplo: redireciona para login
-        // router.replace("/Login");
+        setIsModalVisible(true);
       }
     } catch (e) {
       const error = e as FirebaseError;
@@ -43,7 +51,13 @@ export default function CadastroCliente() {
     }
   };
 
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+    router.replace("/Login");
+  };
+
   const limparCampos = () => {
+    setNome("");
     setEmail("");
     setSenha("");
     setEndereco("");
@@ -63,6 +77,20 @@ export default function CadastroCliente() {
       <View style={styles.formContainer}>
         <Text style={styles.titulo}>Cadastro Cliente</Text>
 
+        {/* Nome */}
+        <View style={styles.inputGroup}>
+          <Ionicons name="person-outline" size={20} color="#00A651" />
+          <TextInput
+            placeholder="Seu nome completo"
+            style={styles.input}
+            value={nome}
+            onChangeText={setNome}
+            placeholderTextColor="#999"
+            autoCapitalize="words"
+          />
+        </View>
+
+        {/* Email */}
         <View style={styles.inputGroup}>
           <MaterialIcons name="email" size={20} color="#00A651" />
           <TextInput
@@ -72,9 +100,12 @@ export default function CadastroCliente() {
             value={email}
             onChangeText={setEmail}
             placeholderTextColor="#999"
+            autoCapitalize="none"
+            autoCorrect={false}
           />
         </View>
 
+        {/* Senha */}
         <View style={styles.inputGroup}>
           <Ionicons name="lock-closed-outline" size={20} color="#00A651" />
           <TextInput
@@ -87,6 +118,32 @@ export default function CadastroCliente() {
           />
         </View>
 
+        {/* Telefone */}
+        <View style={styles.inputGroup}>
+          <FontAwesome5 name="whatsapp" size={20} color="#00A651" />
+          <TextInput
+            placeholder="Telefone"
+            style={styles.input}
+            keyboardType="phone-pad"
+            value={telefone}
+            onChangeText={setTelefone}
+            placeholderTextColor="#999"
+          />
+        </View>
+
+        {/* Endereço */}
+        <View style={styles.inputGroup}>
+          <MaterialIcons name="location-on" size={20} color="#00A651" />
+          <TextInput
+            placeholder="Endereço"
+            style={styles.input}
+            value={endereco}
+            onChangeText={setEndereco}
+            placeholderTextColor="#999"
+          />
+        </View>
+
+        {/* Botões */}
         <TouchableOpacity
           style={styles.botaoCriar}
           onPress={signUp}
@@ -107,10 +164,21 @@ export default function CadastroCliente() {
         >
           <Text style={styles.textoBotaoVoltar}>Voltar</Text>
         </TouchableOpacity>
+
+        {/* Modal */}
+        <CustomModal
+          visible={isModalVisible}
+          animationType="fade"
+          title="Cadastrado com sucesso"
+          message={successMessage}
+          onRequestClose={handleCloseModal}
+        />
       </View>
     </ScrollView>
   );
 }
+
+// Lembre-se de adicionar os estilos (styles) para as novas views e inputs!
 
 const styles = StyleSheet.create({
   container: {

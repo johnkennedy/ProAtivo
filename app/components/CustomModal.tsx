@@ -8,7 +8,7 @@ interface props {
   onRequestClose: () => void;
 }
 
-export default function CustomModalError({
+export default function CustomModal({
   visible,
   animationType,
   title,
@@ -27,7 +27,7 @@ export default function CustomModalError({
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.message}>{message}</Text>
           <TouchableOpacity onPress={onRequestClose} style={styles.button}>
-            <Text style={styles.buttonText}>Fechar</Text>
+            <Text style={styles.buttonText}>Ir para Login</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   button: {
-    backgroundColor: "#FF3B30",
+    backgroundColor: "#00FF00",
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 8,

@@ -9,7 +9,6 @@ declare module "expo-constants" {
       FIREBASE_STORAGE_BUCKET: string;
       FIREBASE_MESSAGING_SENDER_ID: string;
       FIREBASE_APP_ID: string;
-      // adicione mais variáveis aqui se precisar
     };
   }
 }

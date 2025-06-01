@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   FlatList,
@@ -10,14 +10,19 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-
 import { Feather, FontAwesome, Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { router } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { deslogar } from "../../firebase/auth_logout";
-import type { RootStackParamList } from "../../types/routes";
+import { deslogar } from "../../firebase/deslogar";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
+import { db } from "@/FirebaseConfig";
+import { getAuth } from "@firebase/auth";
 
 type Profissional = {
   id: string;
@@ -29,57 +34,82 @@ type Profissional = {
   imagem: string;
 };
 
-type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
-
 export default function TelaCliente() {
-  const navigation = useNavigation<NavigationProps>();
-
   const [categoriaSelecionada, setCategoriaSelecionada] = useState("Todos");
   const [busca, setBusca] = useState("");
-
-  const profissionais = [
-    {
-      id: "1",
-      nome: "John Kennedy",
-      cidade: "Recife - PE",
-      profissao: "Eletricista",
-      avaliacao: 4.6,
-      telefone: "5581999894288",
-      imagem: require("../../assets/images/john.png"),
-    },
-    {
-      id: "2",
-      nome: "Gilberto Belo",
-      cidade: "Olinda - PE",
-      profissao: "Mecânico",
-      avaliacao: 4.9,
-      telefone: "5581991825494",
-      imagem: require("../../assets/images/gilberto.png"),
-    },
-    {
-      id: "3",
-      nome: "Thiago Miguel",
-      cidade: "Jaboatão - PE",
-      profissao: "Pedreiro",
-      avaliacao: 4.8,
-      telefone: "5581985996672",
-      imagem: require("../../assets/images/thiago.png"),
-    },
-    {
-      id: "4",
-      nome: "Tacito Tinôco",
-      cidade: "Paulista - PE",
-      profissao: "Eletricista",
-      avaliacao: 4.7,
-      telefone: "5581979005823",
-      imagem: require("../../assets/images/tacito.png"),
-    },
-  ];
+  const [profissionais, setProfissionais] = useState<any[]>([]); // você pode tipar melhor conforme seu modelo
+  const [usuario, setUsuario] = useState<{
+    nome: string;
+    tipo?: string;
+    fotoPerfil?: string;
+  } | null>(null);
 
   const categorias = ["Todos", "Eletricista", "Mecânico", "Pedreiro"];
 
+  useEffect(() => {
+    const carregarUsuario = async () => {
+      const auth = getAuth();
+      const currentUser = auth.currentUser;
+      if (currentUser) {
+        const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+          if (data.tipo == "prestador") {
+            await deslogar();
+            router.replace("/");
+          }
+          setUsuario({
+            nome: currentUser.displayName || data.nome || "Usuário",
+            tipo: data.tipo,
+            fotoPerfil: data.fotoPerfil,
+          });
+        } else {
+          setUsuario({
+            nome: currentUser.displayName || "Usuário",
+          });
+        }
+      } else {
+        await deslogar();
+        router.replace("/");
+      }
+    };
+
+    carregarUsuario();
+  }, []);
+
+  useEffect(() => {
+    const carregarProfissionais = async () => {
+      try {
+        const q = query(
+          collection(db, "users"),
+          where("tipo", "==", "prestador"),
+        );
+        const querySnapshot = await getDocs(q);
+        const listaProfissionais = querySnapshot.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            nome: data.nome,
+            cidade: data.endereco || "", // se quiser separar cidade, pode ter que adaptar
+            profissao:
+              data.servicos && data.servicos.length > 0
+                ? data.servicos[0]
+                : "Não informado",
+            avaliacao: data.mediaAvaliacoes || 0,
+            telefone: data.telefone || "",
+            imagem: null, // se você salva imagem como URL no Firestore, pode colocar aqui
+          };
+        });
+        setProfissionais(listaProfissionais);
+      } catch (error) {
+        console.error("Erro ao carregar profissionais:", error);
+      }
+    };
+
+    carregarProfissionais();
+  }, []);
+
   const handleLogoff = async () => {
-    console.log("oi");
     await deslogar();
     router.navigate("/");
     return;
@@ -111,17 +141,17 @@ export default function TelaCliente() {
       item.nome.toLowerCase().includes(busca.toLowerCase()),
   );
 
-  // // Botão do WhatsApp com animação
+  // Botão do WhatsApp com animação
   // const BotaoWhatsAppAnimado = ({ onPress }) => {
   //   const scale = new Animated.Value(1);
-
+  //
   //   const animarPressIn = () => {
   //     Animated.spring(scale, {
   //       toValue: 0.9,
   //       useNativeDriver: true,
   //     }).start();
   //   };
-
+  //
   //   const animarPressOut = () => {
   //     Animated.spring(scale, {
   //       toValue: 1,
@@ -130,7 +160,7 @@ export default function TelaCliente() {
   //       useNativeDriver: true,
   //     }).start();
   //   };
-
+  //
   //   return (
   //     <TouchableWithoutFeedback
   //       onPressIn={animarPressIn}
@@ -144,8 +174,9 @@ export default function TelaCliente() {
   //   );
   // };
 
-  return (
-    <SafeAreaView style={styles.container}>
+  // JSX do header da lista (topo + filtros)
+  const ListHeader = () => (
+    <>
       {/* Topo */}
       <View style={styles.topArea}>
         <Image
@@ -153,8 +184,8 @@ export default function TelaCliente() {
           style={styles.avatar}
         />
         <View style={{ flex: 1, marginLeft: 10 }}>
-          <Text style={styles.ola}>Olá, Maria</Text>
-          <Text style={styles.tipo}>Cliente</Text>
+          <Text style={styles.ola}>Olá, {usuario?.nome}</Text>
+          <Text style={styles.tipo}>{usuario?.tipo}</Text>
         </View>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <TouchableOpacity style={{ marginRight: 15 }}>
@@ -197,7 +228,7 @@ export default function TelaCliente() {
                 style={[
                   styles.textoCategoria,
                   categoriaSelecionada === cat &&
-                  styles.textoCategoriaSelecionado,
+                    styles.textoCategoriaSelecionado,
                 ]}
               >
                 {cat}
@@ -206,8 +237,11 @@ export default function TelaCliente() {
           ))}
         </View>
       </View>
+    </>
+  );
 
-      {/* Lista de Profissionais */}
+  return (
+    <>
       <FlatList
         data={profissionaisFiltrados}
         keyExtractor={(item) => item.id}
@@ -232,9 +266,11 @@ export default function TelaCliente() {
           </View>
         )}
         contentContainerStyle={{ paddingBottom: 80 }}
+        ListHeaderComponent={ListHeader}
+        style={styles.container}
       />
 
-      {/* Menu Inferior */}
+      {/* Menu Inferior fixo */}
       <View style={styles.menu}>
         <TouchableOpacity>
           <Ionicons name="home-outline" size={28} color="#00A651" />
@@ -243,10 +279,9 @@ export default function TelaCliente() {
           <Ionicons name="star-outline" size={28} color="#00A651" />
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </>
   );
 }
-
 // Estilos
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff" },

@@ -1,3 +1,4 @@
+import { criarContaPrestadorComEmailESenha } from "@/firebase/criarContaPrestador";
 import {
   Entypo,
   FontAwesome5,
@@ -5,7 +6,9 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
+import { sendEmailVerification, User } from "@firebase/auth";
 import { useRouter } from "expo-router";
+import { FirebaseError } from "firebase/app";
 import React, { useState } from "react";
 import {
   Image,
@@ -16,6 +19,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import ServicosInput from "../components/ServicosInput";
+import CustomModal from "../components/CustomModal";
 
 export default function CadastroProfissional() {
   const router = useRouter();
@@ -24,16 +29,54 @@ export default function CadastroProfissional() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [endereco, setEndereco] = useState("");
-  const [whatsapp, setWhatsapp] = useState("");
-  const [areaAtuacao, setAreaAtuacao] = useState("");
+  const [telefone, setTelefone] = useState("");
+  const [servicos, setServicos] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const tipo = "prestador";
+  const successMessage = "Verifique seu email para confirmar o cadastro.";
+
+  const signUp = async () => {
+    setLoading(true);
+    try {
+      if (servicos.length === 0) {
+        alert("Por favor, adicione pelo menos um servico.");
+        return;
+      }
+
+      const user = await criarContaPrestadorComEmailESenha({
+        nome,
+        email,
+        senha,
+        tipo,
+        endereco,
+        telefone,
+        servicos,
+      });
+      if (user) {
+        await sendEmailVerification(user as User);
+        setIsModalVisible(true);
+      }
+    } catch (e) {
+      const error = e as FirebaseError;
+      alert("Erro ao cadastrar: " + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+    router.replace("/Login");
+  };
 
   const limparCampos = () => {
     setNome("");
     setEmail("");
     setSenha("");
     setEndereco("");
-    setWhatsapp("");
-    setAreaAtuacao("");
+    setTelefone("");
+    setServicos([]);
   };
 
   return (
@@ -63,7 +106,7 @@ export default function CadastroProfissional() {
         <View style={styles.inputGroup}>
           <MaterialIcons name="email" size={20} color="#00A651" />
           <TextInput
-            placeholder="seuemail@email.com.br"
+            placeholder="seuemail@email.com"
             style={styles.input}
             keyboardType="email-address"
             value={email}
@@ -98,11 +141,11 @@ export default function CadastroProfissional() {
         <View style={styles.inputGroup}>
           <FontAwesome5 name="whatsapp" size={20} color="#00A651" />
           <TextInput
-            placeholder="Whatsapp"
+            placeholder="Telefone"
             style={styles.input}
             keyboardType="phone-pad"
-            value={whatsapp}
-            onChangeText={setWhatsapp}
+            value={telefone}
+            onChangeText={setTelefone}
             placeholderTextColor="#999"
           />
         </View>
@@ -113,16 +156,18 @@ export default function CadastroProfissional() {
             size={20}
             color="#00A651"
           />
-          <TextInput
-            placeholder="Qual sua área de atuação?"
-            style={styles.input}
-            value={areaAtuacao}
-            onChangeText={setAreaAtuacao}
-            placeholderTextColor="#999"
-          />
+          <View style={{ flex: 1 }}>
+            <ServicosInput
+              servicos={servicos}
+              onAdd={(s) => setServicos([...servicos, s])}
+              onRemove={(index) =>
+                setServicos(servicos.filter((_, i) => i !== index))
+              }
+            />
+          </View>
         </View>
 
-        <TouchableOpacity style={styles.botaoCriar}>
+        <TouchableOpacity style={styles.botaoCriar} onPress={signUp}>
           <Text style={styles.textoBotao}>Criar</Text>
         </TouchableOpacity>
 
@@ -136,6 +181,14 @@ export default function CadastroProfissional() {
         >
           <Text style={styles.textoBotaoVoltar}>Voltar</Text>
         </TouchableOpacity>
+        {/* Modal */}
+        <CustomModal
+          visible={isModalVisible}
+          animationType="fade"
+          title="Cadastrado com sucesso"
+          message={successMessage}
+          onRequestClose={handleCloseModal}
+        />
       </View>
     </ScrollView>
   );

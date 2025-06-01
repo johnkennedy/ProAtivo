@@ -10,8 +10,10 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { logarComEmailESenha } from "../../firebase/auth_signin_password";
+import { logarComEmailESenha } from "../../firebase/logar";
 import CustomModalError from "../components/CustomModalError";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/FirebaseConfig";
 
 export default function TelaLogin() {
   const [email, setEmail] = useState("");
@@ -24,8 +26,28 @@ export default function TelaLogin() {
   const signIn = async () => {
     setLoading(true);
     try {
-      await logarComEmailESenha(email, senha);
-      router.navigate("/TelaCliente");
+      const user = await logarComEmailESenha(email, senha);
+      const userUid = user.uid;
+
+      // Buscar o tipo do usuário no Firestore
+      const userDocRef = doc(db, "users", userUid);
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (userDocSnap.exists()) {
+        const userData = userDocSnap.data();
+        const tipo = userData.tipo;
+
+        // Redireciona com base no tipo
+        if (tipo === "cliente") {
+          router.replace("/TelaCliente");
+        } else if (tipo === "prestador") {
+          router.replace("/TelaPrestador");
+        } else {
+          throw new Error("Tipo de usuário desconhecido.");
+        }
+      } else {
+        throw new Error("Usuário não encontrado no banco de dados.");
+      }
     } catch (e: unknown) {
       let message = "Ocorreu um erro inesperado";
       if (e instanceof Error) {
@@ -79,10 +101,10 @@ export default function TelaLogin() {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.botaoCadastrar}
-              onPress={() => console.log("oit")}
+              style={styles.botaoVoltar}
+              onPress={() => router.back()}
             >
-              <Text style={styles.textoBotaoCadastrar}>Cadastrar</Text>
+              <Text style={styles.textBotaoVoltar}>Voltar</Text>
             </TouchableOpacity>
           </>
         )}
@@ -150,14 +172,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
-  botaoCadastrar: {
+  botaoVoltar: {
     paddingVertical: 14,
     borderRadius: 10,
     alignItems: "center",
     borderWidth: 1,
     borderColor: "#00A651",
   },
-  textoBotaoCadastrar: {
+  textBotaoVoltar: {
     color: "#00A651",
     fontSize: 16,
     fontWeight: "bold",
