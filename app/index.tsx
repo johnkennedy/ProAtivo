@@ -1,9 +1,16 @@
-import { useRouter } from 'expo-router';
+import { useRouter } from "expo-router";
 import React from "react";
-import { Image, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  Image,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function TelaInicial() {
+export default function Page() {
   const router = useRouter();
 
   return (
@@ -12,7 +19,7 @@ export default function TelaInicial() {
 
       <View style={styles.logoContainer}>
         <Image
-          source={require('../../assets/images/logoProAtivo1.png')}
+          source={require("../assets/images/logoProAtivo1.png")}
           style={styles.logo}
           resizeMode="contain"
         />
@@ -21,7 +28,8 @@ export default function TelaInicial() {
       <View style={styles.areaVerde}>
         <Text style={styles.titulo}>Bem-vindo ao ProAtivo</Text>
         <Text style={styles.subtitulo}>
-          Com o ProAtivo, encontrar profissionais qualificados nunca foi tão fácil.
+          Com o ProAtivo, encontrar profissionais qualificados nunca foi tão
+          fácil.
         </Text>
 
         <View style={styles.buttonContainer}>
@@ -50,7 +58,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
   },
   logoContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingTop: 40,
   },
   logo: {
@@ -114,6 +122,6 @@ const styles = StyleSheet.create({
   textoBotaoCadastrar: {
     color: "#00A651",
     fontSize: 16,
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
 });

@@ -1,36 +1,49 @@
-import { Entypo, FontAwesome5, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useNavigation } from 'expo-router';
-import React, { useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import type { RootStackParamList } from '../types/routes';
-
-type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
-
+import {
+  Entypo,
+  FontAwesome5,
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function CadastroProfissional() {
-  const navigation = useNavigation<NavigationProps>();
+  const router = useRouter();
 
-  const [nome, setNome] = useState('');
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
-  const [endereco, setEndereco] = useState('');
-  const [whatsapp, setWhatsapp] = useState('');
-  const [areaAtuacao, setAreaAtuacao] = useState('');
+  const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [endereco, setEndereco] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
+  const [areaAtuacao, setAreaAtuacao] = useState("");
 
   const limparCampos = () => {
-    setNome('');
-    setEmail('');
-    setSenha('');
-    setEndereco('');
-    setWhatsapp('');
-    setAreaAtuacao('');
+    setNome("");
+    setEmail("");
+    setSenha("");
+    setEndereco("");
+    setWhatsapp("");
+    setAreaAtuacao("");
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
-        <Image source={require('../../assets/images/logoProAtivo2.png')} style={styles.logo} resizeMode="contain" />
+        <Image
+          source={require("../../assets/images/logoProAtivo2.png")}
+          style={styles.logo}
+          resizeMode="contain"
+        />
       </View>
 
       <View style={styles.formContainer}>
@@ -95,9 +108,13 @@ export default function CadastroProfissional() {
         </View>
 
         <View style={styles.inputGroup}>
-          <MaterialCommunityIcons name="briefcase-search" size={20} color="#00A651" />
+          <MaterialCommunityIcons
+            name="briefcase-search"
+            size={20}
+            color="#00A651"
+          />
           <TextInput
-            placeholder="Qual sua área de atuação ?"
+            placeholder="Qual sua área de atuação?"
             style={styles.input}
             value={areaAtuacao}
             onChangeText={setAreaAtuacao}
@@ -112,9 +129,10 @@ export default function CadastroProfissional() {
         <TouchableOpacity style={styles.botaoLimpar} onPress={limparCampos}>
           <Text style={styles.textoBotaoLimpar}>Limpar</Text>
         </TouchableOpacity>
+
         <TouchableOpacity
           style={styles.botaoVoltar}
-          onPress={() => navigation.navigate("EscolhaPerfil")}
+          onPress={() => router.back()}
         >
           <Text style={styles.textoBotaoVoltar}>Voltar</Text>
         </TouchableOpacity>
@@ -123,12 +141,11 @@ export default function CadastroProfissional() {
   );
 }
 
-
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: '#00A651',
-    alignItems: 'center',
+    backgroundColor: "#00A651",
+    alignItems: "center",
     paddingTop: 60,
     paddingBottom: 30,
   },
@@ -140,12 +157,12 @@ const styles = StyleSheet.create({
     height: 350,
   },
   formContainer: {
-    backgroundColor: '#fff',
-    width: '90%',
+    backgroundColor: "#fff",
+    width: "90%",
     borderRadius: 20,
     padding: 20,
     marginTop: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
@@ -153,62 +170,61 @@ const styles = StyleSheet.create({
   },
   titulo: {
     fontSize: 20,
-    fontWeight: 'bold',
-    color: '#00A651',
+    fontWeight: "bold",
+    color: "#00A651",
     marginBottom: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
-    botaoVoltar: {
+  botaoVoltar: {
     borderWidth: 2,
-    borderColor: '#fff',
-    color: '#00A651',
+    borderColor: "#fff",
+    color: "#00A651",
     paddingVertical: 14,
     paddingHorizontal: 60,
     borderRadius: 10,
-    alignItems: 'center',
-    
+    alignItems: "center",
   },
   textoBotaoVoltar: {
-    color: '#00A651',
+    color: "#00A651",
     fontSize: 16,
-    fontWeight: 'bold',
-    alignItems: 'center',
+    fontWeight: "bold",
+    alignItems: "center",
   },
   inputGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderBottomColor: "#ddd",
     marginBottom: 15,
     paddingBottom: 5,
   },
   input: {
     flex: 1,
     marginLeft: 10,
-    color: '#333',
+    color: "#333",
   },
   botaoCriar: {
-    backgroundColor: '#f57c00',
+    backgroundColor: "#f57c00",
     paddingVertical: 12,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 10,
   },
   textoBotao: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: "#fff",
+    fontWeight: "bold",
   },
   botaoLimpar: {
-    backgroundColor: '#fff',
-    borderColor: '#00A651',
+    backgroundColor: "#fff",
+    borderColor: "#00A651",
     borderWidth: 1,
     paddingVertical: 12,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 10,
   },
   textoBotaoLimpar: {
-    color: '#00A651',
-    fontWeight: 'bold',
+    color: "#00A651",
+    fontWeight: "bold",
   },
 });

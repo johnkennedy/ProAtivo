@@ -4,21 +4,27 @@ import { createUserWithEmailAndPassword, type User } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { Cliente } from "./models/Cliente";
 
-export async function criarContaComEmailESenha({ email, senha, tipo: string }: Cliente): Promise<User> {
+export async function criarContaComEmailESenha(
+  email: string,
+  senha: string,
+): Promise<User> {
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      senha,
+    );
     const user = userCredential.user;
     const uid = user.uid;
     // Salva o tipo de usuário no Firestore
-    await setDoc(doc(db, "users", uid), {
-      email,
-      tipo,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    });
+    // await setDoc(doc(db, "users", uid), {
+    //   email,
+    //   tipo,
+    //   createdAt: new Date(),
+    //   updatedAt: new Date()
+    // });
 
     return user;
-
   } catch (error: unknown) {
     if (error instanceof FirebaseError) {
       console.log("Código de erro:", error.code);
