@@ -69,14 +69,7 @@ export default function TelaPrestador() {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.topArea}>
-        <Image
-          source={
-            usuario?.fotoPerfil
-              ? { uri: usuario.fotoPerfil }
-              : require("../../assets/images/fotoPerfil.png")
-          }
-          style={styles.avatar}
-        />
+        <Ionicons name="person-circle-outline" size={28} color="#fff" />
         <View style={{ flex: 1, marginLeft: 10 }}>
           <Text style={styles.ola}>Olá, {usuario?.nome}</Text>
           <Text style={styles.tipo}>Prestador de Serviço</Text>

@@ -178,8 +178,6 @@ export default function CadastroCliente() {
   );
 }
 
-// Lembre-se de adicionar os estilos (styles) para as novas views e inputs!
-
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,

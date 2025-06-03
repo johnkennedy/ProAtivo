@@ -95,7 +95,7 @@ export default function TelaCliente() {
               data.servicos && data.servicos.length > 0
                 ? data.servicos[0]
                 : "Não informado",
-            avaliacao: data.mediaAvaliacoes || 0,
+            avaliacao: (data.mediaAvaliacoes || 4.9).toFixed(1),
             telefone: data.telefone || "",
             imagem: null, // se você salva imagem como URL no Firestore, pode colocar aqui
           };
@@ -179,10 +179,7 @@ export default function TelaCliente() {
     <>
       {/* Topo */}
       <View style={styles.topArea}>
-        <Image
-          source={require("../../assets/images/fotoPerfil.png")}
-          style={styles.avatar}
-        />
+        <Ionicons name="person-circle-outline" size={28} color="#fff" />
         <View style={{ flex: 1, marginLeft: 10 }}>
           <Text style={styles.ola}>Olá, {usuario?.nome}</Text>
           <Text style={styles.tipo}>{usuario?.tipo}</Text>
@@ -228,7 +225,7 @@ export default function TelaCliente() {
                 style={[
                   styles.textoCategoria,
                   categoriaSelecionada === cat &&
-                    styles.textoCategoriaSelecionado,
+                  styles.textoCategoriaSelecionado,
                 ]}
               >
                 {cat}
@@ -247,7 +244,13 @@ export default function TelaCliente() {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.card}>
-            <Image source={item.imagem} style={styles.fotoProfissional} />
+            <View style={styles.avatar}>
+              <Ionicons
+                name="person-circle-outline"
+                size={50}
+                color="#00A651"
+              />
+            </View>{" "}
             <View style={{ flex: 1, marginLeft: 10 }}>
               <Text style={styles.nomeProfissional}>{item.nome}</Text>
               <Text style={styles.localizacao}>{item.cidade}</Text>
@@ -273,7 +276,14 @@ export default function TelaCliente() {
       {/* Menu Inferior fixo */}
       <View style={styles.menu}>
         <TouchableOpacity>
-          <Ionicons name="home-outline" size={28} color="#00A651" />
+          <Ionicons
+            name="home-outline"
+            size={28}
+            color="#00A651"
+            onPress={() => {
+              router.replace("/TelaCliente");
+            }}
+          />
         </TouchableOpacity>
         <TouchableOpacity>
           <Ionicons name="star-outline" size={28} color="#00A651" />
@@ -284,32 +294,37 @@ export default function TelaCliente() {
 }
 // Estilos
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff" },
-
-  // Estilo do topo verde
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
   topArea: {
     backgroundColor: "#00A651",
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 20,
-    paddingTop: 60, // Aumentei o paddingTop para descer o conteúdo
+    paddingTop: 60,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 3,
   },
-
-  avatar: { width: 50, height: 50, borderRadius: 25 },
+  avatar: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: "#e0e0e0",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   ola: {
     color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
-    marginTop: 10, // Ajuste aqui se quiser mais espaço acima do "Olá, Maria"
+    marginTop: 10,
   },
   tipo: { color: "#fff", fontSize: 14 },
-
-  // Container que mantém os filtros dentro do topo verde
   filtroContainer: {
     backgroundColor: "#00A651",
     paddingTop: 20,
@@ -318,7 +333,6 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
   },
-
   buscaArea: {
     flexDirection: "row",
     backgroundColor: "#fff",
@@ -363,8 +377,6 @@ const styles = StyleSheet.create({
   textoCategoriaSelecionado: {
     color: "#fff",
   },
-
-  // Restante dos estilos
   card: {
     flexDirection: "row",
     backgroundColor: "#fff",

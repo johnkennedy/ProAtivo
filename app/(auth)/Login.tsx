@@ -29,7 +29,6 @@ export default function TelaLogin() {
       const user = await logarComEmailESenha(email, senha);
       const userUid = user.uid;
 
-      // Buscar o tipo do usuário no Firestore
       const userDocRef = doc(db, "users", userUid);
       const userDocSnap = await getDoc(userDocRef);
 
@@ -37,7 +36,6 @@ export default function TelaLogin() {
         const userData = userDocSnap.data();
         const tipo = userData.tipo;
 
-        // Redireciona com base no tipo
         if (tipo === "cliente") {
           router.replace("/TelaCliente");
         } else if (tipo === "prestador") {
@@ -78,7 +76,7 @@ export default function TelaLogin() {
           style={styles.input}
           value={email}
           onChangeText={setEmail}
-          placeholderTextColor="#999" // Deixando o placeholder mais escuro
+          placeholderTextColor="#999"
         />
 
         <TextInput
@@ -152,7 +150,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     marginBottom: 20,
     fontSize: 16,
-    color: "#333", // Corrige o texto digitado que estava claro também
+    color: "#333",
   },
   forgot: {
     alignSelf: "flex-end",

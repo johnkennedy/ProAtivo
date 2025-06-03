@@ -8,7 +8,6 @@ export default function TelaEscolhaPerfil() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Logo e fundo verde */}
       <View style={styles.header}>
         <Image
           source={require("../../assets/images/logoProAtivo2.png")}
@@ -17,7 +16,6 @@ export default function TelaEscolhaPerfil() {
         />
       </View>
 
-      {/* Área branca com botões */}
       <View style={styles.areaBranca}>
         <Text style={styles.titulo}>Qual o perfil desejado?</Text>
 
@@ -80,8 +78,8 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 10,
     marginBottom: 20,
-    width: "80%", // Define mesma largura
-    alignItems: "center", // Centraliza texto
+    width: "80%",
+    alignItems: "center",
   },
   textoBotaoProfissional: {
     color: "#fff",
