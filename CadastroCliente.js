@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
 import { Ionicons, MaterialIcons, FontAwesome5, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 export default function CadastroCliente() {
+  const navigation = useNavigation();
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [endereco, setEndereco] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
-  const [areaAtuacao, setAreaAtuacao] = useState('');
 
   const limparCampos = () => {
     setNome('');
@@ -34,7 +35,7 @@ export default function CadastroCliente() {
             style={styles.input}
             value={nome}
             onChangeText={setNome}
-            placeholderTextColor="#666"
+            placeholderTextColor="#999"
           />
         </View>
 
@@ -46,7 +47,7 @@ export default function CadastroCliente() {
             keyboardType="email-address"
             value={email}
             onChangeText={setEmail}
-            placeholderTextColor="#666"
+            placeholderTextColor="#999"
           />
         </View>
 
@@ -58,7 +59,7 @@ export default function CadastroCliente() {
             secureTextEntry
             value={senha}
             onChangeText={setSenha}
-            placeholderTextColor="#666"
+            placeholderTextColor="#999"
           />
         </View>
 
@@ -69,7 +70,7 @@ export default function CadastroCliente() {
             style={styles.input}
             value={endereco}
             onChangeText={setEndereco}
-            placeholderTextColor="#666"
+            placeholderTextColor="#999"
           />
         </View>
 
@@ -81,15 +82,22 @@ export default function CadastroCliente() {
             keyboardType="phone-pad"
             value={whatsapp}
             onChangeText={setWhatsapp}
-            placeholderTextColor="#666"
+            placeholderTextColor="#999"
           />
         </View>
+
         <TouchableOpacity style={styles.botaoCriar}>
           <Text style={styles.textoBotao}>Criar</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.botaoLimpar} onPress={limparCampos}>
           <Text style={styles.textoBotaoLimpar}>Limpar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.botaoVoltar}
+          onPress={() => navigation.navigate("EscolhaPerfil")}
+        >
+          <Text style={styles.textoBotaoVoltar}>Voltar</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -109,8 +117,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   logo: {
-    width: 380,
-    height: 380,
+    width: 350,
+    height: 350,
   },
   formContainer: {
     backgroundColor: '#fff',
@@ -130,6 +138,22 @@ const styles = StyleSheet.create({
     color: '#00A651',
     marginBottom: 20,
     textAlign: 'center',
+  },
+    botaoVoltar: {
+    borderWidth: 2,
+    borderColor: '#fff',
+    color: '#00A651',
+    paddingVertical: 14,
+    paddingHorizontal: 60,
+    borderRadius: 10,
+    alignItems: 'center',
+    
+  },
+  textoBotaoVoltar: {
+    color: '#00A651',
+    fontSize: 16,
+    fontWeight: 'bold',
+    alignItems: 'center',
   },
   inputGroup: {
     flexDirection: 'row',

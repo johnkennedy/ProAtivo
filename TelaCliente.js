@@ -15,39 +15,43 @@ export default function TelaCliente() {
   const [busca, setBusca] = useState('');
 
   const profissionais = [
-    {
-      id: '1',
-      nome: 'João da Silva',
-      cidade: 'Recife - PE',
-      profissao: 'Eletricista',
-      avaliacao: 4.6,
-      telefone: '5581991111111',
-    },
-    {
-      id: '2',
-      nome: 'Carlos Oliveira',
-      cidade: 'Olinda - PE',
-      profissao: 'Mecânico',
-      avaliacao: 4.9,
-      telefone: '5581992222222',
-    },
-    {
-      id: '3',
-      nome: 'Pedro Ferreira',
-      cidade: 'Jaboatão - PE',
-      profissao: 'Pedreiro',
-      avaliacao: 4.8,
-      telefone: '5581993333333',
-    },
-    {
-      id: '4',
-      nome: 'Lucas Santos',
-      cidade: 'Paulista - PE',
-      profissao: 'Eletricista',
-      avaliacao: 4.7,
-      telefone: '5581994444444',
-    },
-  ];
+  {
+    id: '1',
+    nome: 'John Kennedy',
+    cidade: 'Recife - PE',
+    profissao: 'Eletricista',
+    avaliacao: 4.6,
+    telefone: '5581999894288',
+    imagem: require('./assets/john.png'),
+  },
+  {
+    id: '2',
+    nome: 'Gilberto Belo',
+    cidade: 'Olinda - PE',
+    profissao: 'Mecânico',
+    avaliacao: 4.9,
+    telefone: '5581991825494',
+    imagem: require('./assets/gilberto.png'),
+  },
+  {
+    id: '3',
+    nome: 'Thiago Miguel',
+    cidade: 'Jaboatão - PE',
+    profissao: 'Pedreiro',
+    avaliacao: 4.8,
+    telefone: '5581985996672',
+    imagem: require('./assets/thiago.png'),
+  },
+  {
+    id: '4',
+    nome: 'Tacito Tinôco',
+    cidade: 'Paulista - PE',
+    profissao: 'Eletricista',
+    avaliacao: 4.7,
+    telefone: '5581979005823',
+    imagem: require('./assets/tacito.png'),
+  },
+];
 
   const categorias = ['Todos', 'Eletricista', 'Mecânico', 'Pedreiro'];
 
@@ -135,32 +139,36 @@ export default function TelaCliente() {
         </View>
       </View>
 
-      {/* Área de busca */}
-      <View style={styles.buscaArea}>
-        <TextInput
-          placeholder="Buscar profissional"
-          value={busca}
-          onChangeText={setBusca}
-          style={styles.inputBusca}
-        />
-        <TouchableOpacity style={styles.botaoFiltro}>
-          <Feather name="filter" size={24} color="#00A651" />
-        </TouchableOpacity>
-      </View>
-
-      {/* Filtro de Categorias */}
-      <View style={styles.filtroCategorias}>
-        {categorias.map((cat) => (
-          <TouchableOpacity
-            key={cat}
-            style={[styles.botaoCategoria, categoriaSelecionada === cat && styles.categoriaSelecionada]}
-            onPress={() => setCategoriaSelecionada(cat)}
-          >
-            <Text style={[styles.textoCategoria, categoriaSelecionada === cat && styles.textoCategoriaSelecionado]}>
-              {cat}
-            </Text>
+      {/* Filtros dentro da área verde */}
+      <View style={styles.filtroContainer}>
+        {/* Área de busca */}
+        <View style={styles.buscaArea}>
+          <TextInput
+            placeholder="Buscar Profissional"
+            placeholderTextColor="#999"
+            value={busca}
+            onChangeText={setBusca}
+            style={styles.inputBusca}
+          />
+          <TouchableOpacity style={styles.botaoFiltro}>
+            <Feather name="filter" size={24} color="#00A651" />
           </TouchableOpacity>
-        ))}
+        </View>
+
+        {/* Filtro de Categorias */}
+        <View style={styles.filtroCategorias}>
+          {categorias.map((cat) => (
+            <TouchableOpacity
+              key={cat}
+              style={[styles.botaoCategoria, categoriaSelecionada === cat && styles.categoriaSelecionada]}
+              onPress={() => setCategoriaSelecionada(cat)}
+            >
+              <Text style={[styles.textoCategoria, categoriaSelecionada === cat && styles.textoCategoriaSelecionado]}>
+                {cat}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
 
       {/* Lista de Profissionais */}
@@ -169,7 +177,7 @@ export default function TelaCliente() {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.card}>
-            <Image source={require('./assets/avatarPadrao.png')} style={styles.fotoProfissional} />
+            <Image source={item.imagem} style={styles.fotoProfissional} />
             <View style={{ flex: 1, marginLeft: 10 }}>
               <Text style={styles.nomeProfissional}>{item.nome}</Text>
               <Text style={styles.localizacao}>{item.cidade}</Text>
@@ -179,7 +187,9 @@ export default function TelaCliente() {
                 <Text style={{ marginLeft: 4 }}>{item.avaliacao}</Text>
               </View>
             </View>
-            <BotaoWhatsAppAnimado onPress={() => abrirWhatsApp(item)} />
+            <TouchableOpacity style={styles.botaoWhatsApp} onPress={() => abrirWhatsApp(item)}>
+              <FontAwesome name="whatsapp" size={20} color="#fff" />
+            </TouchableOpacity>
           </View>
         )}
         contentContainerStyle={{ paddingBottom: 80 }}
@@ -200,23 +210,49 @@ export default function TelaCliente() {
 
 // Estilos
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#00A651" },
+  container: { flex: 1, backgroundColor: "#fff" },
+
+  // Estilo do topo verde
   topArea: {
+    backgroundColor: '#00A651',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 20,
-    marginTop: 40,
+    paddingHorizontal: 20,
+    paddingTop: 60,  // Aumentei o paddingTop para descer o conteúdo
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 3,
   },
+
   avatar: { width: 50, height: 50, borderRadius: 25 },
-  ola: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
+  ola: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 10,  // Ajuste aqui se quiser mais espaço acima do "Olá, Maria"
+  },
   tipo: { color: '#fff', fontSize: 14 },
+
+  // Container que mantém os filtros dentro do topo verde
+  filtroContainer: {
+    backgroundColor: '#00A651',
+    paddingTop: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+  },
+
   buscaArea: {
     flexDirection: 'row',
     backgroundColor: '#fff',
-    margin: 20,
+    marginBottom: 15,
     borderRadius: 10,
     padding: 5,
     alignItems: 'center',
+    elevation: 3,
   },
   inputBusca: {
     flex: 1,
@@ -253,30 +289,78 @@ const styles = StyleSheet.create({
   textoCategoriaSelecionado: {
     color: "#fff",
   },
+
+  // Restante dos estilos
   card: {
-    flexDirection: 'row',
-    backgroundColor: '#fff',
-    marginHorizontal: 20,
-    marginVertical: 8,
-    padding: 12,
-    borderRadius: 10,
-    alignItems: 'center',
-    elevation: 2,
-  },
-  fotoProfissional: { width: 50, height: 50, borderRadius: 25 },
-  nomeProfissional: { fontWeight: 'bold', fontSize: 16 },
-  localizacao: { color: '#666', fontSize: 12 },
-  profissao: { color: '#00A651', fontSize: 12 },
-  avaliacao: { flexDirection: 'row', alignItems: 'center', marginTop: 4 },
-  menu: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 10,
-    backgroundColor: "#fff",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-  },
+  flexDirection: 'row',
+  backgroundColor: '#fff',
+  marginHorizontal: 20,
+  marginVertical: 10,
+  padding: 16,
+  borderRadius: 16,
+  alignItems: 'center',
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.1,
+  shadowRadius: 4,
+  elevation: 4,
+},
+
+fotoProfissional: {
+  width: 60,
+  height: 60,
+  borderRadius: 30,
+},
+
+nomeProfissional: {
+  fontWeight: 'bold',
+  fontSize: 18,
+  color: '#333',
+},
+
+localizacao: {
+  color: '#777',
+  fontSize: 13,
+  marginTop: 2,
+},
+
+profissao: {
+  backgroundColor: '#e0f2f1',
+  color: '#00796B',
+  alignSelf: 'flex-start',
+  fontSize: 12,
+  paddingHorizontal: 8,
+  paddingVertical: 2,
+  borderRadius: 12,
+  marginTop: 6,
+},
+
+avaliacao: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginTop: 8,
+},
+
+botaoWhatsApp: {
+  backgroundColor: '#25D366',
+  padding: 8,
+  borderRadius: 25,
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+menu: {
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  right: 0,
+  height: 60,
+  backgroundColor: '#ffffff',
+  flexDirection: 'row',
+  justifyContent: 'space-around',
+  alignItems: 'center',
+  borderTopWidth: 1,
+  borderColor: '#ddd',
+  elevation: 10,
+},
+
 });
