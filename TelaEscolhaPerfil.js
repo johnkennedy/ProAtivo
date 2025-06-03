@@ -79,9 +79,10 @@ const styles = StyleSheet.create({
   botaoProfissional: {
     backgroundColor: '#f57c00',
     paddingVertical: 14,
-    paddingHorizontal: 60,
     borderRadius: 10,
     marginBottom: 20,
+    width: '80%', // Define mesma largura
+    alignItems: 'center', // Centraliza texto
   },
   textoBotaoProfissional: {
     color: '#fff',
@@ -91,9 +92,10 @@ const styles = StyleSheet.create({
   botaoCliente: {
     backgroundColor: '#f57c00',
     paddingVertical: 14,
-    paddingHorizontal: 60,
     borderRadius: 10,
     marginBottom: 20,
+    width: '80%',
+    alignItems: 'center',
   },
   botaoVoltar: {
     borderWidth: 2,

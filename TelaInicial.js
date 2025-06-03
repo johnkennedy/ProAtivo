@@ -27,14 +27,14 @@ export default function TelaInicial() {
           <TouchableOpacity
             style={styles.botaoEntrar}
             onPress={() => navigation.navigate("Login")}
-            >
+          >
             <Text style={styles.textoBotaoEntrar}>Entrar</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.botaoCadastrar}
             onPress={() => navigation.navigate("EscolhaPerfil")}
-            >
+          >
             <Text style={styles.textoBotaoCadastrar}>Cadastrar</Text>
           </TouchableOpacity>
         </View>
@@ -47,29 +47,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#ffffff",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 40,
   },
   logoContainer: {
-    marginTop: 20,
+    alignItems: 'center',
+    paddingTop: 40,
   },
   logo: {
     width: 380,
     height: 380,
   },
   areaVerde: {
+    flex: 1,
     backgroundColor: "#00A651",
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
     paddingTop: 40,
     paddingBottom: 20,
     paddingHorizontal: 16,
-    width: "100%",
     alignItems: "center",
     justifyContent: "center",
-    flex: 1,
-    gap: 20,
   },
   titulo: {
     fontSize: 35,
@@ -114,8 +110,8 @@ const styles = StyleSheet.create({
     borderColor: "#ddd",
   },
   textoBotaoCadastrar: {
-  color: "#333",
-  fontSize: 16,
-  fontWeight: "bold",
-},
+    color: "#00A651",
+    fontSize: 16,
+    fontWeight: "bold"
+  },
 });
